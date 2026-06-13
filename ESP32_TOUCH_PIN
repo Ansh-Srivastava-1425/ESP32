@@ -1,0 +1,19 @@
+#define TOUCH_PIN 15
+#define LED 2
+
+void setup() {
+ Serial.begin(115200);
+ pinMode(led , OUTPUT);
+}
+
+void loop() {
+  int touchValue = touchRead(TOUCH_PIN);
+  serial.println(touchValue);
+
+  if(touchValue < 30){
+    digitalWrite(LED , HIGH);
+  }
+  else{
+    digitalWrite(LED , LOW);
+  }
+}
