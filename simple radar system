@@ -1,0 +1,60 @@
+#include <ESP32Servo.h>
+
+Servo radarServo;
+
+#define TRIG_PIN 5
+#define ECHO_PIN 18
+#define SERVO_PIN 13
+
+void setup() {
+  Serial.begin(115200);
+
+  pinMode(TRIG_PIN, OUTPUT);
+  pinMode(ECHO_PIN, INPUT);
+
+  radarServo.attach(SERVO_PIN);
+}
+
+float getDistance() {
+  digitalWrite(TRIG_PIN, LOW);
+  delayMicroseconds(2);
+
+  digitalWrite(TRIG_PIN, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG_PIN, LOW);
+
+  long duration = pulseIn(ECHO_PIN, HIGH);
+
+  float distance = duration * 0.034 / 2;
+
+  return distance;
+}
+
+void loop() {
+
+  // 0 -> 180
+  for (int angle = 0; angle <= 180; angle++) {
+    radarServo.write(angle);
+
+    delay(20);
+
+    float distance = getDistance();
+
+    Serial.print(angle);
+    Serial.print(",");
+    Serial.println(distance);
+  }
+
+  // 180 -> 0
+  for (int angle = 180; angle >= 0; angle--) {
+    radarServo.write(angle);
+
+    delay(20);
+
+    float distance = getDistance();
+
+    Serial.print(angle);
+    Serial.print(",");
+    Serial.println(distance);
+  }
+}
