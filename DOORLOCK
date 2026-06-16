@@ -1,0 +1,70 @@
+#include <Keypad.h>
+#include <ESP32Servo.h>
+
+Servo lockServo;
+
+const String password = "1234";
+String inputPassword = "";
+
+const byte ROWS = 4;
+const byte COLS = 4;
+
+char keys[ROWS][COLS] = {
+  {'1','2','3','A'},
+  {'4','5','6','B'},
+  {'7','8','9','C'},
+  {'*','0','#','D'}
+};
+
+byte rowPins[ROWS] = {13, 12, 14, 27};
+byte colPins[COLS] = {26, 25, 33, 32};
+
+Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
+
+void setup() {
+  Serial.begin(115200);
+
+  lockServo.attach(18);
+
+  // Locked position
+  lockServo.write(0);
+
+  Serial.println("Door Lock Ready");
+}
+
+void loop() {
+  char key = keypad.getKey();
+
+  if (key) {
+    Serial.print(key);
+
+    if (key == '#') {
+
+      if (inputPassword == password) {
+        Serial.println("\nAccess Granted");
+
+        // Unlock
+        lockServo.write(90);
+
+        delay(5000);
+
+        // Lock again
+        lockServo.write(0);
+
+      } else {
+        Serial.println("\nWrong Password");
+      }
+
+      inputPassword = "";
+    }
+
+    else if (key == '*') {
+      inputPassword = "";
+      Serial.println("\nCleared");
+    }
+
+    else {
+      inputPassword += key;
+    }
+  }
+}
