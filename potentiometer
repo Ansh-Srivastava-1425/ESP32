@@ -1,0 +1,15 @@
+const int potPin = 34;
+const int ledPin = 25;
+
+void setup() {
+  ledcAttach(ledPin, 5000, 8);  // PWM channel
+}
+
+void loop() {
+  int potValue = analogRead(potPin);   // 0-4095
+  int brightness = map(potValue, 0, 4095, 0, 255);
+
+  ledcWrite(ledPin, brightness);
+
+  delay(10);
+}
