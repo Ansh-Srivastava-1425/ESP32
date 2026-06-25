@@ -1,0 +1,58 @@
+#include "BluetoothSerial.h"
+
+BluetoothSerial myBT;
+
+#define RED 13
+#define GREEN 12
+#define BLUE 14
+
+void setup() {
+  pinMode(RED, OUTPUT);
+  pinMode(GREEN, OUTPUT);
+  pinMode(BLUE, OUTPUT);
+
+  myBT.begin("ESP32-BT");
+}
+
+void loop() {
+  if (myBT.available()) {
+
+    char cmd = myBT.read();
+
+    switch (cmd) {
+
+      case 'R':
+        digitalWrite(RED, HIGH);
+        digitalWrite(GREEN, LOW);
+        digitalWrite(BLUE, LOW);
+        break;
+
+      case 'G':
+        digitalWrite(RED, LOW);
+        digitalWrite(GREEN, HIGH);
+        digitalWrite(BLUE, LOW);
+        break;
+
+      case 'B':
+        digitalWrite(RED, LOW);
+        digitalWrite(GREEN, LOW);
+        digitalWrite(BLUE, HIGH);
+        break;
+
+      case '0':
+        digitalWrite(RED, LOW);
+        digitalWrite(GREEN, LOW);
+        digitalWrite(BLUE, LOW);
+        break;
+
+      case '1':
+        digitalWrite(RED, HIGH);
+        digitalWrite(GREEN, HIGH);
+        digitalWrite(BLUE, HIGH);
+        break;
+
+      default:
+        break;
+    }
+  }
+}
